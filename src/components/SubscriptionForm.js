@@ -20,14 +20,14 @@ export default function SubscriptionForm() {
       },
       body: JSON.stringify({ email }),
     })
-      .then((res) => res.text())
-      .then((data) => JSON.parse(`${data}`))
+      .then((res) => res.json())
+      // .then((data) => JSON.parse(`${data}`))
       .then((data) =>
-        hitToast(data.message, data.success ? "success" : "error")
+        hitToast(data.success ? "success" : "error", data.message)
       )
-      .catch(() =>
-        hitToast("Something went wrong. Please try again.", "error")
-      );
+      .catch((err) => {
+        hitToast("error", "Something went wrong. Please try again.");
+      });
 
     setAlertClass("");
   };
@@ -35,10 +35,10 @@ export default function SubscriptionForm() {
   const validate = (email) => {
     if (
       email
-        .trim(
+        .trim()
+        .match(
           /^([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
-        )
-        .match() == null
+        ) == null
     ) {
       return false;
     } else if (email.trim() === "") {
